@@ -16,25 +16,24 @@ pipeline {
 
         stage('Debug Workspace') {
             steps {
-                echo "Checking workspace and project folder..."
+                echo "Checking workspace..."
                 sh "pwd"
                 sh "ls -l"
-                sh "ls -l project || true"
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                echo "Building Docker image from project folder..."
+                echo "Building Docker image from repo root..."
 
                 sh '''
-                if [ ! -f project/Dockerfile ]; then
-                    echo "❌ Error: Dockerfile not found in project folder!"
+                if [ ! -f Dockerfile ]; then
+                    echo "❌ Error: Dockerfile not found!"
                     exit 1
                 fi
                 '''
 
-                sh "docker build -t $IMAGE_NAME:$IMAGE_TAG ./project"
+                sh "docker build -t $IMAGE_NAME:$IMAGE_TAG ."
                 sh "docker tag $IMAGE_NAME:$IMAGE_TAG $DOCKER_REGISTRY/$DOCKER_REPO/$IMAGE_NAME:$IMAGE_TAG"
             }
         }
