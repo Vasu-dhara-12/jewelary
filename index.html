@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Elegant Jewelry</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: #fff8f6;
+            color: #333;
+        }
+
+        header {
+            background: linear-gradient(to right, #d4a5a5, #f7d9d9);
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            color: #5a2a2a;
+        }
+
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #5a2a2a;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #a05252;
+        }
+
+        .hero {
+            height: 80vh;
+            background: url('https://images.unsplash.com/photo-1605100804763-247f67b3557e') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+        }
+
+        .hero h2 {
+            font-size: 50px;
+            background: rgba(0,0,0,0.5);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .section {
+            padding: 50px;
+            text-align: center;
+        }
+
+        .section h2 {
+            margin-bottom: 30px;
+            color: #7a3e3e;
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .card h3 {
+            padding: 10px;
+        }
+
+        .price {
+            color: #a05252;
+            font-weight: bold;
+        }
+
+        .btn {
+            background: #a05252;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #7a3e3e;
+        }
+
+        footer {
+            background: #5a2a2a;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>💎 Elegant Jewelry</h1>
+    <nav>
+        <a href="#">Home</a>
+        <a href="#earrings">Earrings</a>
+        <a href="#necklaces">Necklaces</a>
+        <a href="#contact">Contact</a>
+    </nav>
+</header>
+
+<section class="hero">
+    <h2>Shine Like a Queen 👑</h2>
+</section>
+
+<!-- Earrings Section -->
+<section class="section" id="earrings">
+    <h2>✨ Earrings Collection</h2>
+    <div class="products">
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1617038220319-276d3cfab638" alt="">
+            <h3>Gold Drop Earrings</h3>
+            <p class="price">₹1,299</p>
+            <button class="btn" onclick="buyItem('Gold Drop Earrings')">Buy Now</button>
+        </div>
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f" alt="">
+            <h3>Diamond Studs</h3>
+            <p class="price">₹2,499</p>
+            <button class="btn" onclick="buyItem('Diamond Studs')">Buy Now</button>
+        </div>
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1620119950652-5a1c6d88c52a" alt="">
+            <h3>Silver Hoops</h3>
+            <p class="price">₹899</p>
+            <button class="btn" onclick="buyItem('Silver Hoops')">Buy Now</button>
+        </div>
+
+    </div>
+</section>
+
+<!-- Necklaces Section -->
+<section class="section" id="necklaces">
+    <h2>💖 Necklace Collection</h2>
+    <div class="products">
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519" alt="">
+            <h3>Gold Necklace</h3>
+            <p class="price">₹3,999</p>
+            <button class="btn" onclick="buyItem('Gold Necklace')">Buy Now</button>
+        </div>
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1588449668365-d15e397f6787" alt="">
+            <h3>Pearl Necklace</h3>
+            <p class="price">₹2,199</p>
+            <button class="btn" onclick="buyItem('Pearl Necklace')">Buy Now</button>
+        </div>
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a" alt="">
+            <h3>Diamond Pendant</h3>
+            <p class="price">₹5,499</p>
+            <button class="btn" onclick="buyItem('Diamond Pendant')">Buy Now</button>
+        </div>
+
+    </div>
+</section>
+
+<!-- Contact -->
+<section class="section" id="contact">
+    <h2>📞 Contact Us</h2>
+    <p>Email: support@elegantjewelry.com</p>
+    <p>Phone: +91 9876543210</p>
+</section>
+
+<footer>
+    <p>© 2026 Elegant Jewelry | Designed with ❤️</p>
+</footer>
+
+<script>
+    function buyItem(itemName) {
+        alert("You selected: " + itemName + "\\nProceeding to checkout...");
+    }
+</script>
+
+</body>
+</html>
