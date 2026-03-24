@@ -1,89 +1,67 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'docker:24-dind' // Docker-in-Docker image
+            args '--privileged -v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
 
     environment {
-        DOCKER_REGISTRY = "docker.io"
-        DOCKER_REPO     = "vasudhara12"
-        IMAGE_NAME      = "jewelry-site"
-        IMAGE_TAG       = "latest"
-
-        CONTAINER_NAME  = "jewelry-container"
-        PORT            = "8877"
-        CONTAINER_PORT  = "80"
+        IMAGE_NAME = "jewelry-site"
+        TAG = "latest"
+        DOCKERHUB_CREDENTIALS = "dockerhub-creds" // Jenkins credentials ID
+        DOCKERHUB_USERNAME = "your-dockerhub-username"
+        DOCKERHUB_REPO = "your-dockerhub-username/jewelry-site"
     }
 
     stages {
+        stage('Checkout SCM') {
+            steps {
+                git url: 'https://github.com/Vasu-dhara-12/jewelary.git', branch: 'main'
+            }
+        }
 
         stage('Debug Workspace') {
             steps {
-                echo "Checking workspace..."
-                sh "pwd"
-                sh "ls -l"
+                sh 'pwd'
+                sh 'ls -l'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                echo "Building Docker image from repo root..."
-
-                sh '''
-                if [ ! -f Dockerfile ]; then
-                    echo "❌ Error: Dockerfile not found!"
-                    exit 1
-                fi
-                '''
-
-                sh "docker build -t $IMAGE_NAME:$IMAGE_TAG ."
-                sh "docker tag $IMAGE_NAME:$IMAGE_TAG $DOCKER_REGISTRY/$DOCKER_REPO/$IMAGE_NAME:$IMAGE_TAG"
+                echo 'Building Docker image...'
+                sh "docker build -t ${IMAGE_NAME}:${TAG} ."
             }
         }
 
         stage('Push to Docker Hub') {
             steps {
-                echo "Logging in and pushing image..."
-
-                withCredentials([usernamePassword(
-                    credentialsId: 'DOCKER_CREDS',
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
-
-                    sh '''
-                    echo "$DOCKER_PASS" | docker login $DOCKER_REGISTRY -u "$DOCKER_USER" --password-stdin
-
-                    docker push $DOCKER_REGISTRY/$DOCKER_REPO/$IMAGE_NAME:$IMAGE_TAG
-
-                    docker logout $DOCKER_REGISTRY
-                    '''
+                echo 'Pushing Docker image to Docker Hub...'
+                withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDENTIALS}", usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    sh """
+                        echo $PASSWORD | docker login -u $USERNAME --password-stdin
+                        docker tag ${IMAGE_NAME}:${TAG} ${DOCKERHUB_REPO}:${TAG}
+                        docker push ${DOCKERHUB_REPO}:${TAG}
+                    """
                 }
             }
         }
 
         stage('Run Docker Container') {
             steps {
-                echo "Stopping old container (if exists)..."
-
-                sh "docker stop $CONTAINER_NAME || true"
-                sh "docker rm $CONTAINER_NAME || true"
-
-                echo "Running new container..."
-
-                sh """
-                docker run -d \
-                -p $PORT:$CONTAINER_PORT \
-                --name $CONTAINER_NAME \
-                $DOCKER_REGISTRY/$DOCKER_REPO/$IMAGE_NAME:$IMAGE_TAG
-                """
+                echo 'Running Docker container...'
+                sh "docker run -d -p 8080:80 ${IMAGE_NAME}:${TAG}"
             }
         }
     }
 
     post {
         success {
-            echo "✅ Deployment Successful!"
+            echo '✅ Deployment Succeeded!'
         }
         failure {
-            echo "❌ Deployment Failed!"
+            echo '❌ Deployment Failed!'
         }
     }
 }
