@@ -1,15 +1,10 @@
 pipeline {
-    agent any {
-        docker {
-            image 'docker:24-dind' // Docker-in-Docker image
-            args '--privileged -v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+    agent any
 
     environment {
         IMAGE_NAME = "jewelry-site"
         TAG = "latest"
-        DOCKERHUB_CREDENTIALS = "dockerhub-creds" // Jenkins credentials ID
+        DOCKERHUB_CREDENTIALS = "dockerhub-creds"
         DOCKERHUB_USERNAME = "your-dockerhub-username"
         DOCKERHUB_REPO = "your-dockerhub-username/jewelry-site"
     }
@@ -38,9 +33,13 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 echo 'Pushing Docker image to Docker Hub...'
-                withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDENTIALS}", usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                withCredentials([usernamePassword(
+                    credentialsId: "${DOCKERHUB_CREDENTIALS}",
+                    usernameVariable: 'USERNAME',
+                    passwordVariable: 'PASSWORD'
+                )]) {
                     sh """
-                        echo $PASSWORD | docker login -u $USERNAME --password-stdin
+                        echo \$PASSWORD | docker login -u \$USERNAME --password-stdin
                         docker tag ${IMAGE_NAME}:${TAG} ${DOCKERHUB_REPO}:${TAG}
                         docker push ${DOCKERHUB_REPO}:${TAG}
                     """
